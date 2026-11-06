@@ -832,13 +832,19 @@ int rdk_hal_ipc_exec(hal_ipc_node_t *p_ipc_node, hal_ipc_processor_desc_t *desc)
     struct sockaddr_un cli_sockaddr, srv_sockaddr;
     unsigned char *tmp;
 
+    if (p_ipc_node == NULL || desc == NULL) {
+        wifi_hal_error_print("%s:%d: NULL parameter\n", __func__, __LINE__);
+        return -1;
+    }
+
     if ((cli_sock = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
         wifi_hal_error_print("%s:%d:server socket create failed err: %d\n", __func__, __LINE__, errno);
         return -1;
     }
 
     cli_sockaddr.sun_family = AF_UNIX;
-    strcpy(cli_sockaddr.sun_path, p_ipc_node->node_path);
+    strncpy(cli_sockaddr.sun_path, p_ipc_node->node_path, sizeof(p_ipc_node->node_path));
+    cli_sockaddr.sun_path[sizeof(p_ipc_node->node_path)] = '\0';
     len = sizeof(cli_sockaddr);
 
     unlink(p_ipc_node->node_path);
@@ -862,7 +868,7 @@ int rdk_hal_ipc_exec(hal_ipc_node_t *p_ipc_node, hal_ipc_processor_desc_t *desc)
 
         default:
             wifi_hal_error_print("%s:%d: Assert!!!.\n", __func__, __LINE__);
-            assert(1);
+            close(cli_sock);
             break;
     }
 
@@ -891,7 +897,7 @@ int rdk_hal_ipc_exec(hal_ipc_node_t *p_ipc_node, hal_ipc_processor_desc_t *desc)
     ///     SEND DATA TO SERVER FOR PROCESSING                                 ///
     ///************************************************************************///
     tmp = (unsigned char *)desc;
-    if (sizeof(hal_ipc_processor_desc_t) > max_size) {
+    if (1) {
         nbytes = 0;
         target_bytes = 0;
 
