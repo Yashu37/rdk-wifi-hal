@@ -191,6 +191,9 @@ INT wifi_hal_getNeighborReportActivation(   UINT apIndex,
 {
     wifi_interface_info_t *interface = NULL;
     wifi_hal_dbg_print("%s:%d: Enter.\n", __func__, __LINE__);
+    if (activate == NULL) {
+        return RETURN_ERR;
+    }
 
     interface = get_interface_by_vap_index(apIndex);
     if(!interface) {
@@ -198,6 +201,9 @@ INT wifi_hal_getNeighborReportActivation(   UINT apIndex,
       return RETURN_ERR;
     }
 
+    if (interface->vap_info.vap_mode != wifi_vap_mode_ap) {
+        return RETURN_ERR;
+    }
     *activate = interface->vap_info.u.bss_info.nbrReportActivated;
 
     return 0;
