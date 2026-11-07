@@ -498,6 +498,9 @@ INT wifi_hal_getRadioCountryCode(   INT radioIndex,
     wifi_radio_info_t *radio;
 
     wifi_hal_dbg_print("%s:%d: Enter.\n", __func__, __LINE__);
+    if (output_string == NULL) {
+        return -1;
+    }
     radio = get_radio_by_rdk_index(radioIndex);
 
     if(!radio){
