@@ -121,12 +121,21 @@ INT wifi_hal_getSSIDEnable( INT ssidIndex,
     wifi_interface_info_t *interface = NULL;
     wifi_hal_dbg_print("%s:%d: Enter.\n", __func__, __LINE__);
 
+    if (output_bool == NULL) {
+        return RETURN_ERR;
+    }
     interface = get_interface_by_vap_index(ssidIndex);
     if(!interface){
       wifi_hal_error_print("%s:%d:interface for ap index:%d not found\n", __func__, __LINE__, ssidIndex);
       return RETURN_ERR;
     }
-    *output_bool = interface->vap_info.u.bss_info.enabled;
+    if (interface->vap_info.vap_mode == wifi_vap_mode_ap) {
+        *output_bool = interface->vap_info.u.bss_info.enabled;
+    } else if (interface->vap_info.vap_mode == wifi_vap_mode_sta) {
+        *output_bool = interface->vap_info.u.sta_info.enabled;
+    } else {
+        return RETURN_ERR;
+    }
 
     return 0;
 }
