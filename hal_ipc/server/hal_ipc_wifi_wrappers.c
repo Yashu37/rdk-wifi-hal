@@ -352,6 +352,11 @@ INT wifi_hal_steering_clientSet(UINT steeringgroupIndex,
     char *key = NULL;
     bm_sta_list_t *bm_client_info = NULL;
 
+    if (client_mac == NULL || config == NULL) {
+        wifi_hal_error_print("%s:%d: NULL %s for ap index %d\n", __func__, __LINE__, client_mac == NULL ? "client mac" : "config", apIndex);
+        return RETURN_ERR;
+    }
+
     interface = get_interface_by_vap_index(apIndex);
     if (interface == NULL) {
         wifi_hal_error_print("%s:%d: WiFi interface not found:%d\n", __func__, __LINE__, apIndex);
