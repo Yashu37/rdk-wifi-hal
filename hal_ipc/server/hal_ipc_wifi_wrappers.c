@@ -554,6 +554,9 @@ INT wifi_hal_getRadioTransmitPower( INT radioIndex,
                                     ULONG *output_ulong)
 {
     wifi_hal_dbg_print("%s:%d: Enter.\n", __func__, __LINE__);
+    if (output_ulong == NULL) {
+        return RETURN_ERR;
+    }
     /*
     wifi_radio_info_t *radio;
 
@@ -567,7 +570,9 @@ INT wifi_hal_getRadioTransmitPower( INT radioIndex,
     *output_ulong = radio->oper_param.transmitPower;
     */
 
-    wifi_getRadioTransmitPower(radioIndex, output_ulong);
+    if (wifi_getRadioTransmitPower(radioIndex, output_ulong) != RETURN_OK) {
+        return RETURN_ERR;
+    }
 
     return 0;
 }
