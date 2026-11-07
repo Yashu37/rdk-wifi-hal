@@ -239,7 +239,9 @@ INT wifi_hal_getRadioOperatingFrequencyBand(INT radioIndex,
 {
     wifi_radio_info_t *radio = NULL;
     wifi_hal_dbg_print("%s:%d: Enter.\n", __func__, __LINE__);
-
+    if (output_string == NULL) {
+        return RETURN_ERR;
+    }
     radio = get_radio_by_rdk_index(radioIndex);
 
     if(!radio){
@@ -253,6 +255,8 @@ INT wifi_hal_getRadioOperatingFrequencyBand(INT radioIndex,
         snprintf(output_string, 64, "5GHz");
     } else if (radio->oper_param.band == WIFI_FREQUENCY_6_BAND) {
         snprintf(output_string, 64, "6GHz");
+    } else if (radio->oper_param.band == WIFI_FREQUENCY_60_BAND) {
+        snprintf(output_string, 64, "60GHz");
     } else {
         snprintf(output_string, 64, "2.4GHz");
     }
