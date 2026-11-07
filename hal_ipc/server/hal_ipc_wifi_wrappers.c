@@ -81,6 +81,13 @@ INT wifi_hal_getRadioChannelStats(INT radioIndex,
 {
     wifi_hal_dbg_print("%s:%d: Enter. Array size %d\n", __func__, __LINE__, array_size);
 
+    if (input_output_channelStats_array == NULL) {
+        return RETURN_ERR;
+    }
+    if (array_size <= 0) {
+        return RETURN_ERR;
+    }
+
     if (array_size > HAL_IPC_RADIO_CHANNELS_MAX){
         wifi_hal_dbg_print("%s:%d: array_size %d is too big. Truncate.\n", __func__, __LINE__, array_size);
         array_size = HAL_IPC_RADIO_CHANNELS_MAX;
