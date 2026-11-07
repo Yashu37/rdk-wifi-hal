@@ -279,9 +279,12 @@ INT wifi_hal_getApAssociatedDeviceTxStatsResult(INT radioIndex,
     int ret;
 
     wifi_hal_info_print("%s:%d: Enter...radio_index:%d\n", __func__, __LINE__, radioIndex);
+    if (clientMacAddress == NULL || stats_array == NULL || output_array_size == NULL || handle == NULL) {
+        return RETURN_ERR;
+    }
 
     ret = wifi_getApAssociatedDeviceTxStatsResult(radioIndex, clientMacAddress, stats_array, output_array_size, handle);
-    if (ret == RETURN_OK) {
+    if (ret == RETURN_OK && *stats_array != NUL) {
         wifi_associated_dev_rate_info_tx_stats_t *stats_tx = *stats_array;
         int index = 0;
         for (index = 0; index < (int)*output_array_size; index++) {
