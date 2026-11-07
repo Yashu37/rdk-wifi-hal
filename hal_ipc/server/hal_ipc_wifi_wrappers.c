@@ -227,8 +227,11 @@ INT wifi_hal_getApAssociatedClientDiagnosticResult( INT apIndex,
                                                     wifi_associated_dev3_t *dev_conn)
 {
     wifi_hal_dbg_print("%s:%d: Enter.\n", __func__, __LINE__);
+    if (mac_addr == NULL || dev_conn == NULL) {
+        return RETURN_ERR;
+    }
 
-    wifi_getApAssociatedClientDiagnosticResult(apIndex, mac_addr, dev_conn);
+    return wifi_getApAssociatedClientDiagnosticResult(apIndex, mac_addr, dev_conn);
 
     return 0;
 }
