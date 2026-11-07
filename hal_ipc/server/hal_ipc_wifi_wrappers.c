@@ -472,13 +472,28 @@ INT wifi_hal_getAssociationReqIEs(  UINT apIndex,
     wifi_interface_info_t *interface = NULL;
     struct sta_info *station = NULL;
 
+    if (clientMacAddress == NULL || req_ies == NULL || req_ies_len == NULL) {
+        wifi_hal_error_print("%s:%d: NULL argument for ap index:%u\n", __func__, __LINE__, apIndex);
+        return RETURN_ERR;
+    }
+
     interface = get_interface_by_vap_index(apIndex);
     if(!interface) {
       wifi_hal_error_print("%s:%d:interface for ap index:%d not found\n", __func__, __LINE__, apIndex);
       return RETURN_ERR;
     }
+
+    if (interface->vap_info.vap_mode != wifi_vap_mode_ap) {
+        wifi_hal_error_print("%s:%d: vap:%u is not an AP vap\n", __func__, __LINE__, apIndex);
+        return RETURN_ERR;
+    }
     pthread_mutex_lock(&g_wifi_hal.hapd_lock);
     station = ap_get_sta(&interface->u.ap.hapd, (const u8 *) clientMacAddress);
+    if (station == NULL) {
+        wifi_hal_error_print("%s:%d: client not found on ap index:%u\n", __func__, __LINE__, apIndex);
+        pthread_mutex_unlock(&g_wifi_hal.hapd_lock);
+        return RETURN_ERR;
+    }
     if (req_ies_size < station->assoc_req_len) {
       wifi_hal_error_print("%s:%d: req_ies_size %u is too small (should be at least %zu)\n", __func__, __LINE__, req_ies_size, station->assoc_req_len);
       pthread_mutex_unlock(&g_wifi_hal.hapd_lock);
