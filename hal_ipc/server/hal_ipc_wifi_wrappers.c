@@ -393,6 +393,11 @@ INT wifi_hal_steering_clientRemove( UINT steeringgroupIndex,
     mac_addr_str_t sta_mac_str;
     char *key = NULL;
 
+    if (client_mac == NULL) {
+        wifi_hal_error_print("%s:%d: NULL client mac for ap index %d\n", __func__, __LINE__, apIndex);
+        return RETURN_ERR;
+    }
+
     interface = get_interface_by_vap_index(apIndex);
     if(!interface) {
       wifi_hal_error_print("%s:%d:interface for ap index:%d not found\n", __func__, __LINE__, apIndex);
