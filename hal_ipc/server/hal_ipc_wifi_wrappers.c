@@ -517,6 +517,9 @@ INT wifi_hal_getRadioOperatingChannelBandwidth( INT radioIndex,
     wifi_radio_info_t *radio = NULL;
     wifi_hal_dbg_print("%s:%d: Enter.\n", __func__, __LINE__);
 
+    if (output_string == NULL) {
+        return RETURN_ERR;
+    }
     radio = get_radio_by_rdk_index(radioIndex);
 
     if(!radio){
@@ -539,6 +542,14 @@ INT wifi_hal_getRadioOperatingChannelBandwidth( INT radioIndex,
 
         case WIFI_CHANNELBANDWIDTH_160MHZ:
             snprintf(output_string, 7, "160MHz");
+            break;
+
+	case WIFI_CHANNELBANDWIDTH_80_80MHZ:
+            snprintf(output_string, 9, "80+80MHz");
+            break;
+
+        case WIFI_CHANNELBANDWIDTH_320MHZ:
+            snprintf(output_string, 7, "320MHz");
             break;
 
         default:
