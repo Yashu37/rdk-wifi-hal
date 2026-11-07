@@ -631,6 +631,10 @@ INT wifi_hal_getApNumDevicesAssociated(INT apIndex, ULONG *output_ulong)
 
     wifi_hal_dbg_print("%s:%d: Enter.\n", __func__, __LINE__);
 
+    if (output_ulong == NULL) {
+        wifi_hal_error_print("%s:%d: NULL output pointer for vap index %d\n", __func__, __LINE__, apIndex);
+        return -1;
+    }
     interface = get_interface_by_vap_index(apIndex);
     if (!interface)
     {
@@ -638,6 +642,10 @@ INT wifi_hal_getApNumDevicesAssociated(INT apIndex, ULONG *output_ulong)
         return -1;
     }
 
+    if (interface->vap_info.vap_mode != wifi_vap_mode_ap) {
+        wifi_hal_error_print("%s:%d: vap index %d is not an AP vap\n", __func__, __LINE__, apIndex);
+        return -1;
+    }
     pthread_mutex_lock(&g_wifi_hal.hapd_lock);
     *output_ulong = interface->u.ap.hapd.num_sta;
     pthread_mutex_unlock(&g_wifi_hal.hapd_lock);
