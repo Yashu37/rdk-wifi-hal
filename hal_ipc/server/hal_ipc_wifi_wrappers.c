@@ -264,7 +264,9 @@ INT wifi_hal_getRadioOperatingFrequencyBand(INT radioIndex,
 INT wifi_hal_getRadioNumberOfEntries(ULONG *output)
 {
     wifi_hal_dbg_print("%s:%d: Enter.\n", __func__, __LINE__);
-
+    if (output == NULL) {
+        return RETURN_ERR;
+    }
     *output = g_wifi_hal.num_radios;
     return 0;
 }
