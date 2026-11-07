@@ -138,6 +138,10 @@ INT wifi_hal_getSSIDRadioIndex( INT ssidIndex,
     wifi_interface_info_t *interface = NULL;
     wifi_hal_dbg_print("%s:%d: Enter.\n", __func__, __LINE__);
 
+    if (radioIndex == NULL) {
+        return RETURN_ERR;
+    }
+
     interface = get_interface_by_vap_index(ssidIndex);
     if(!interface) {
       wifi_hal_error_print("%s:%d:interface for ap index:%d not found\n", __func__, __LINE__, ssidIndex);
