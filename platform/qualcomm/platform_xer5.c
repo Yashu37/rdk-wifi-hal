@@ -1403,6 +1403,9 @@ int nl80211_send_mlo_msg(struct nl_msg *msg)
 }
 
 void wifi_drv_get_phy_eht_cap_mac(struct eht_capabilities *eht_capab, struct nlattr **tb) {
+    if (eht_capab == NULL || tb == NULL) {
+        return;
+    }
     if (tb[NL80211_BAND_IFTYPE_ATTR_EHT_CAP_MAC]) {
         size_t len;
 
@@ -1411,7 +1414,7 @@ void wifi_drv_get_phy_eht_cap_mac(struct eht_capabilities *eht_capab, struct nla
         if (len > sizeof(eht_capab->mac_cap)) {
             len = sizeof(eht_capab->mac_cap);
         }
-        os_memcpy(eht_capab->mac_cap,
+        os_memcpy(&eht_capab->mac_cap,
                 nla_data(tb[NL80211_BAND_IFTYPE_ATTR_EHT_CAP_MAC]), len);
     }
 }
