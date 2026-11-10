@@ -706,6 +706,13 @@ void wifi_hal_deauth(int vap_index, int status, uint8_t *mac)
 {
     u8 own_addr[ETH_ALEN];
     wifi_interface_info_t *interface = get_interface_by_vap_index(vap_index);
+    if (interface == NULL) {
+        return;
+    }
+    if (interface->vap_info.vap_mode != wifi_vap_mode_ap) {
+        return;
+    }
+
     struct hostapd_data *hapd = &interface->u.ap.hapd;
 
     pthread_mutex_lock(&g_wifi_hal.hapd_lock);
