@@ -507,6 +507,11 @@ INT wifi_hal_init()
 
     for (i = 0; i < g_wifi_hal.num_radios; i++) {
         radio = get_radio_by_rdk_index(i);
+	if (radio == NULL) {
+            wifi_hal_error_print("%s:%d: No radio with RDK radio index %d\n", __func__, __LINE__, i);
+            continue;
+        }
+
         if (radio->radio_presence == false) {
             wifi_hal_error_print("%s:%d: Skip the Radio %d .This is sleeping in ECO mode \n", __func__, __LINE__, radio->index);
             continue;
