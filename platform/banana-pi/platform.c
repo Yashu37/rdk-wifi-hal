@@ -1027,6 +1027,9 @@ int nl80211_send_mlo_msg(struct nl_msg *msg)
 #if defined(CONFIG_IEEE80211BE)
 void wifi_drv_get_phy_eht_cap_mac(struct eht_capabilities *eht_capab, struct nlattr **tb)
 {
+    if (eht_capab == NULL || tb == NULL) {
+        return;
+    }
     if (tb[NL80211_BAND_IFTYPE_ATTR_EHT_CAP_MAC] &&
         nla_len(tb[NL80211_BAND_IFTYPE_ATTR_EHT_CAP_MAC]) >= 2) {
         const u8 *pos;
