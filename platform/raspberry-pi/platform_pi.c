@@ -59,7 +59,7 @@ int wifi_nvram_defaultRead(char *in,char *out)
     char cmd[MAX_CMD_SIZE]={'\0'};
     char *position;
 
-    sprintf(cmd,"grep '%s=' /nvram/wifi_defaults.txt",in);
+    snprintf(cmd,MAX_CMD_SIZE,"grep '%s=' /nvram/wifi_defaults.txt",in);
     if(_syscmd(cmd,buf,sizeof(buf)) == -1)
     {
         wifi_hal_dbg_print("\nError %d:%s:%s\n",__LINE__,__func__,__FILE__);
