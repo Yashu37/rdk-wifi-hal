@@ -4755,6 +4755,11 @@ int wifi_hal_send_mgmt_frame(int apIndex,mac_address_t sta, const unsigned char 
     int link_id = 0;
 #endif
     memset(bssid_buf, 0xff, sizeof(bssid_buf));
+
+    if (sta == NULL || data == NULL || data_len == 0) {
+        wifi_hal_error_print("%s:%d: invalid parameters (sta:%p data:%p len:%zu)\n", __func__, __LINE__, (const void *)sta, (const void *)data, data_len);
+        return -1;
+    }
     
     buf = os_zalloc(24 + data_len);
     if (buf == NULL)
