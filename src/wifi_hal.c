@@ -116,10 +116,18 @@ wifi_hal_priv_t g_wifi_hal;
 INT wifi_hal_getInterfaceMap(wifi_interface_name_idex_map_t *if_map, unsigned int max_entries,
     unsigned int *if_map_size)
 {
+    if (if_map_size == NULL) {
+        wifi_hal_error_print("%s:%d: NULL if_map_size\n", __func__, __LINE__);
+        return RETURN_ERR;
+    }
     *if_map_size = get_sizeof_interfaces_index_map();
     if (max_entries < *if_map_size) {
         wifi_hal_error_print("%s:%d: Invalid buffer size %d, expected %d\n", __func__, __LINE__,
             max_entries, *if_map_size);
+        return RETURN_ERR;
+    }
+    if (if_map == NULL && *if_map_size != 0) {
+        wifi_hal_error_print("%s:%d: NULL if_map\n", __func__, __LINE__);
         return RETURN_ERR;
     }
     get_wifi_interface_info_map(if_map);
