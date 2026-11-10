@@ -3923,6 +3923,10 @@ static int get_channel_stats_handler(struct nl_msg *msg, void *arg)
     struct genlmsghdr *gnlh = nlmsg_data(nlmsg_hdr(msg));
     channel_stats_arr_t *stats = (channel_stats_arr_t *)arg;
 
+    if (stats->arr == NULL || stats->arr_size <= 0) {
+        return NL_SKIP;
+    }
+
     if (nla_parse(tb, NL80211_ATTR_MAX, genlmsg_attrdata(gnlh, 0), genlmsg_attrlen(gnlh, 0),
         NULL) < 0) {
         wifi_hal_stats_error_print("%s:%d Failed to parse vendor data\n", __func__, __LINE__);
@@ -4033,6 +4037,12 @@ INT wifi_getRadioChannelStats(INT radioIndex, wifi_channelStats_t *input_output_
 
     wifi_hal_stats_dbg_print("%s:%d: Get radio stats for index: %d\n", __func__, __LINE__,
         radioIndex);
+
+    if (input_output_channelStats_array == NULL && array_size != 0) {
+        wifi_hal_stats_error_print("%s:%d: NULL channel stats array (size %d)\n", __func__, __LINE__,
+            array_size);
+        return RETURN_ERR;
+    }
 
     radio = get_radio_by_rdk_index(radioIndex);
     if (radio == NULL) {
