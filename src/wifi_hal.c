@@ -1776,11 +1776,22 @@ INT wifi_hal_kickAssociatedDevice(INT ap_index, mac_address_t mac)
 {
     wifi_interface_info_t *interface;
 
+    if (mac == NULL) {
+        wifi_hal_error_print("%s:%d: NULL mac pointer \n", __func__, __LINE__);
+        return RETURN_ERR;
+    }
+
     interface  = get_interface_by_vap_index(ap_index);
     if (interface ==  NULL) {
         wifi_hal_error_print("%s:%d: NULL Interface pointer \n", __func__, __LINE__);
         return RETURN_ERR;
     }
+
+    if (interface->vap_info.vap_mode != wifi_vap_mode_ap) {
+        wifi_hal_error_print("%s:%d: vap index:%d is not an AP vap \n", __func__, __LINE__, ap_index);
+        return RETURN_ERR;
+    }
+
     u8 own_addr[ETH_ALEN];
     mac_address_t bcastmac= {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
     pthread_mutex_lock(&g_wifi_hal.hapd_lock);
