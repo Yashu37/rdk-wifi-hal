@@ -2397,6 +2397,19 @@ INT wifi_hal_sendDataFrame( int vap_id, unsigned char *dmac, unsigned char *data
     wifi_interface_info_t *interface = NULL;
     wifi_hal_dbg_print("Entering for %s:%d:for : %d\n", __func__, __LINE__, vap_id);
 
+    if (data_len < 0) {
+        return RETURN_ERR;
+    }
+    if (vap_id < 0 || vap_id >= MAX_VAP) {
+        return RETURN_ERR;
+    }
+    if (dmac == NULL) {
+        return RETURN_ERR;
+    }
+    if (data_buff == NULL && data_len > 0) {
+        return RETURN_ERR;
+    }
+
     if ((t_len = (data_len + sizeof(struct ether_header))) > sizeof(t_data))
          return RETURN_ERR;
 
