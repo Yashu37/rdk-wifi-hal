@@ -2028,7 +2028,7 @@ INT wifi_hal_addHostapdDenyAclDevice(INT apIndex, CHAR *DeviceMacAddress)
     pthread_mutex_lock(&g_wifi_hal.hapd_lock);
     hapd = &interface->u.ap.hapd;
 
-    if (!hapd->conf) {
+    if (!hapd->conf || !hapd->iface) {
         pthread_mutex_unlock(&g_wifi_hal.hapd_lock);
         return RETURN_ERR;
     }
