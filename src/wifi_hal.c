@@ -1998,9 +1998,9 @@ INT wifi_hal_getScanResults(wifi_radio_index_t index, wifi_channel_t *channel, w
         } else {
             if (freq == scan_info->freq) {
                 memcpy(tmp_bss, scan_info, sizeof(wifi_bss_info_t));
+		tmp_bss++;
             }
         }
-        tmp_bss++;
         scan_info = hash_map_get_next(interface->scan_info_map, scan_info);
     }
     pthread_mutex_unlock(&interface->scan_info_mutex);
