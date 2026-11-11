@@ -1409,6 +1409,12 @@ INT wifi_hal_createVAP(wifi_radio_index_t index, wifi_vap_info_map_t *map)
     RADIO_INDEX_ASSERT(index);
     NULL_PTR_ASSERT(map);
 
+    if (map->num_vaps > (sizeof(map->vap_array) / sizeof(map->vap_array[0]))) {
+        wifi_hal_error_print("%s:%d: radio index:%d num_vaps:%u exceeds the vap array size:%u\n", __func__, __LINE__,
+            index, map->num_vaps, (unsigned int)(sizeof(map->vap_array) / sizeof(map->vap_array[0])));
+        return WIFI_HAL_INVALID_ARGUMENTS;
+    }
+
     radio = get_radio_by_rdk_index(index);
     if (radio == NULL) {
         wifi_hal_error_print("%s:%d: radio index:%d failed not find radio\n", __func__, __LINE__,
