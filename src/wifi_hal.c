@@ -2570,7 +2570,9 @@ INT wifi_hal_startScan(wifi_radio_index_t index, wifi_neighborScanMode_t scan_mo
             continue;
         }
         sprintf(tmp_str, "%d ", freq_list[freq_num]);
-        strcat(chan_list_str, tmp_str);
+	if (strlen(chan_list_str) + strlen(tmp_str) < sizeof(chan_list_str)) {
+            strcat(chan_list_str, tmp_str);
+        }
 
 	freq_num++;
     }
