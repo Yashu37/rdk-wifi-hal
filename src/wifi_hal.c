@@ -3700,6 +3700,10 @@ void wifi_hal_register_frame_hook(wifi_hal_frame_hook_fn_t func)
 {
     wifi_device_frame_hooks_t   *hooks;
     hooks = get_device_frame_hooks();
+    if (hooks->num_hooks >= MAX_APPS) {
+        wifi_hal_error_print("%s:%d: frame hook table is full (%d), hook not registered\n", __func__, __LINE__, MAX_APPS);
+        return;
+    }
     hooks->frame_hooks_fn[hooks->num_hooks] = func;
     hooks->num_hooks++;
 }
