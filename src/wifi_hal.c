@@ -2268,6 +2268,10 @@ INT wifi_hal_delApAclDevice(INT apIndex, CHAR *DeviceMacAddress)
         wifi_hal_error_print("%s:%d:interface for vap index:%d not found\n", __func__, __LINE__, apIndex);
         return RETURN_ERR;
     }
+    if (DeviceMacAddress == NULL) {
+        wifi_hal_error_print("%s:%d: NULL MAC address for ap index %d\n", __func__, __LINE__, apIndex);
+        return RETURN_ERR;
+    }
     vap = &interface->vap_info;
     
     wifi_hal_info_print("%s:%d: Interface: %s MAC: %s\n", __func__, __LINE__, interface->name, DeviceMacAddress);
@@ -2296,8 +2300,12 @@ INT wifi_hal_delApAclDevice(INT apIndex, CHAR *DeviceMacAddress)
 
     if (nl80211_set_acl(interface) != 0) {
         acl_map = (acl_map_t *)malloc(sizeof(acl_map_t));
+	if (acl_map == NULL) {
+            wifi_hal_error_print("%s:%d: memory allocation failure for interface:%s\n", __func__, __LINE__, interface->name);
+            return -1;
+        }
         wifi_hal_error_print("%s:%d MAC %s nl80211_set_acl failure for interface:%s\n", __func__, __LINE__, DeviceMacAddress, interface->name);
-        memcpy(acl_map->mac_addr_str, DeviceMacAddress, sizeof(mac_addr_str_t));
+        snprintf(acl_map->mac_addr_str, sizeof(acl_map->mac_addr_str), "%s", DeviceMacAddress);
         to_mac_bytes(acl_map->mac_addr_str, acl_map->mac_addr);
 
         hash_map_put(interface->acl_map, strdup(DeviceMacAddress), acl_map);
