@@ -1899,7 +1899,21 @@ INT wifi_hal_set_acs_keep_out_chans(wifi_radio_operationParam_t *wifi_radio_oper
             continue;
         }
         wifi_channelBandwidth_t bandwidth = chans_per_band->chanwidth;
+	if (chans_per_band->num_channels_list > MAX_CHANNELS) {
+            wifi_hal_error_print("%s:%d Invalid num_channels_list %d for bandwidth 0x%x\n",
+                               __func__, __LINE__, chans_per_band->num_channels_list, bandwidth);
+            return RETURN_ERR;
+        }
+
         for (int j = 0; j < chans_per_band->num_channels_list; j++) {
+	    if (chans_per_band->channels_list[j].num_channels < 0 ||
+                chans_per_band->channels_list[j].num_channels > MAX_CHANNELS ||
+                strlen(buff) + 7 * (size_t)chans_per_band->channels_list[j].num_channels + 1 > sizeof(buff)) {
+                wifi_hal_error_print("%s:%d Chanspec list for radio %u bandwidth 0x%x does not fit in buff\n",
+                                   __func__, __LINE__, radioIndex, bandwidth);
+                return RETURN_ERR;
+            }
+
             if (wifi_drv_get_chspc_configs(radioIndex, bandwidth, &chans_per_band->channels_list[j], buff) != 0) {
                 wifi_hal_error_print("%s:%d Failed for radio %u bandwidth 0x%x\n",
                                    __func__, __LINE__, radioIndex, bandwidth);
