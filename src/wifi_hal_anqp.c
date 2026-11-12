@@ -840,6 +840,12 @@ int wifi_anqpStartTest(unsigned int apIndex, mac_address_t sta)
 
     printf("%s:%d: Enter\n", __func__, __LINE__);
 
+    if (sta == NULL)
+    {
+        wifi_anqp_dbg_print(1, "%s:%d: NULL sta\n", __func__, __LINE__);
+        return RETURN_ERR;
+    }
+
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
     {
         wifi_anqp_dbg_print(1, "%s:%d: Error opening raw socket, err:%d\n", __func__, __LINE__, errno);
