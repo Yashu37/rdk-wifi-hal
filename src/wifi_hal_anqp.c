@@ -72,6 +72,10 @@ void wifi_anqp_dbg_print(int level, char *format, ...)
     va_list list;
     static FILE *fpg = NULL;
 
+    if (format == NULL) {
+        return;
+    }
+
     if ((access("/nvram/wifiAnqpDbg", R_OK)) != 0)
     {
         return;
@@ -80,7 +84,7 @@ void wifi_anqp_dbg_print(int level, char *format, ...)
     strcat(buff, " ");
 
     va_start(list, format);
-    vsprintf(&buff[strlen(buff)], format, list);
+    vsnprintf(&buff[strlen(buff)], sizeof(buff) - strlen(buff), format, list);
     va_end(list);
     if (fpg == NULL)
     {
