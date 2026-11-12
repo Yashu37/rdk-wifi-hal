@@ -4937,6 +4937,10 @@ int wifi_hal_setApMacAddressControlMode(uint32_t apIndex, uint32_t mac_filter_mo
 
 int wifi_hal_add_station_bridge( char *interface_name,char *bridge_name)
 {
+    if (interface_name == NULL || bridge_name == NULL) {
+        wifi_hal_error_print("%s:%d: invalid interface or bridge name\n", __func__, __LINE__);
+        return RETURN_ERR;
+    }
     nl80211_remove_from_bridge(interface_name);
     if (nl80211_create_bridge(interface_name, bridge_name) != 0) {
         wifi_hal_error_print("%s:%d: Interface:%s failed to create bridge:%s\n",
