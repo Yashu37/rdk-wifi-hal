@@ -4795,6 +4795,12 @@ void wifi_hal_disassoc(int vap_index, int status, uint8_t *mac)
 {
     u8 own_addr[ETH_ALEN];
     wifi_interface_info_t *interface = get_interface_by_vap_index(vap_index);
+
+    if (interface == NULL) {
+        wifi_hal_error_print("%s:%d: interface for vap index:%d not found\n", __func__, __LINE__, vap_index);
+        return;
+    }
+
     struct hostapd_data *hapd = &interface->u.ap.hapd;
 
     pthread_mutex_lock(&g_wifi_hal.hapd_lock);
