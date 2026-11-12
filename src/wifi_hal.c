@@ -4827,6 +4827,11 @@ INT wifi_hal_getRadioTemperature(wifi_radio_index_t radioIndex,
 {
     platform_get_radio_phytemperature_t get_radio_phytemperature_fn;
 
+    if (radioPhyTemperature == NULL) {
+        wifi_hal_stats_error_print("%s:%d: radioPhyTemperature is NULL\n", __func__, __LINE__);
+        return RETURN_ERR;
+    }
+
     get_radio_phytemperature_fn = get_platform_get_radio_phytemperature_fn();
     if (get_radio_phytemperature_fn == NULL) {
         wifi_hal_stats_error_print("%s:%d: Failed to get phytemperature platfrom cb\n", __func__,
