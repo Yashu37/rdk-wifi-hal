@@ -3770,7 +3770,7 @@ static int build_candidates_list(const wifi_BTMRequest_t *request, u8 *nei_rep, 
 INT wifi_hal_setBTMRequest(UINT apIndex, mac_address_t peerMac, wifi_BTMRequest_t *request)
 {
     wifi_interface_info_t *interface;
-    u8 requestMode = request->requestMode;
+    u8 requestMode = 0;
     struct sta_info *sta = NULL;
     u8 bss_term_dur[12] = {0};
     char *url = NULL;
@@ -3786,6 +3786,7 @@ INT wifi_hal_setBTMRequest(UINT apIndex, mac_address_t peerMac, wifi_BTMRequest_
     if (_IS_INVALID_ARG(request == NULL)) {
         return WIFI_HAL_INVALID_ARGUMENTS;
     }
+    requestMode = request->requestMode;
 
     interface = get_interface_by_vap_index(apIndex);
     if (interface == NULL) {
@@ -3852,6 +3853,10 @@ INT wifi_hal_setBTMRequest(UINT apIndex, mac_address_t peerMac, wifi_BTMRequest_
 
     /// - url:
     if (requestMode & WNM_BSS_TM_REQ_ESS_DISASSOC_IMMINENT) {
+        size_t url_len = strnlen(request->url, MAX_URL_LEN);
+        if (url_len > request->urlLen) {
+            url_len = request->urlLen;
+        }
         url = (char*) malloc(request->urlLen + 1);
         if (url == NULL) {
             wifi_hal_error_print("%s:%d: [BTM] BTM request: Cannot allocate memory\n", __func__, __LINE__);
