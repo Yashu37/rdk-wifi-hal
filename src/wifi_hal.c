@@ -4165,6 +4165,11 @@ INT wifi_hal_setNeighborReports(UINT apIndex, UINT numNeighborReports, wifi_Neig
         return WIFI_HAL_ERROR;
     }
 
+    if (interface->u.ap.hapd.conf == NULL) {
+        wifi_hal_error_print("%s:%d: [BTM] hostapd configuration of ap index:%u is not available\n", __func__, __LINE__, apIndex);
+        return WIFI_HAL_ERROR;
+    }
+
     pthread_mutex_lock(&g_wifi_hal.hapd_lock);
     hapd = &interface->u.ap.hapd;
     wifi_hal_dbg_print("%s:%d: [BTM] HAPD Interface name:%s\n", __func__, __LINE__, hapd->conf->iface);
