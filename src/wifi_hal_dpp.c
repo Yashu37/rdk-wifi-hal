@@ -113,6 +113,10 @@ void wifi_dpp_dbg_print(char *format, ...)
     va_list list;
     static FILE *fpg = NULL;
 
+    if (format == NULL) {
+        return;
+    }
+
     if ((access("/nvram/wifiDppDbg", R_OK)) != 0) {
         return;
     }
@@ -121,7 +125,7 @@ void wifi_dpp_dbg_print(char *format, ...)
     strcat(buff, " ");
 
     va_start(list, format);
-    vsprintf(&buff[strlen(buff)], format, list);
+    vsnprintf(&buff[strlen(buff)], sizeof(buff) - strlen(buff), format, list);
     va_end(list);
 
     if (fpg == NULL) {
